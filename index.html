@@ -19,7 +19,7 @@
                 margin-right: 10vw;
             }
 
-            .abstract {
+            .section {
                 margin: 1em;
                 padding: 2em;
                 padding-bottom: 4em;
@@ -33,13 +33,17 @@
                 width: 90%;
             }
 
-            .abstract:hover {
+            .section.abstract {
+                width: 92%;
+            }
+
+            .section:hover {
                 background-color: rgba(0,0,0,0.05);
                 scale: 1;
                 color: black;
             }
 
-            .abstract>p{
+            .section>p{
                 text-align: justify;
                 margin-top: 0.1em;
                 margin-bottom: 1em;
@@ -49,11 +53,38 @@
                 padding-right: 1em;
             }
 
-            .abstract>h3{
+            .section>ul{
+                text-align: justify;
+                margin-top: 0.1em;
+                margin-bottom: 1em;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 0.9em;
+                padding-left: 1em;
+                padding-right: 1em;
+            }
+
+            .section>h3{
                 margin-bottom: 0.1em;
                 border-bottom: double 5px rgba(0,0,0,0.2);
                 font-variant: small-caps;
                 font-size: 1.25em;
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            }
+
+            .section.abstract>h2{
+                text-align: center;
+                margin-bottom: 0.5em;
+                border-bottom: none;
+                font-variant: small-caps;
+                font-size: 1.5em;
+                font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            }
+
+            .section>h2{
+                margin-bottom: 0.5em;
+                border-bottom: solid 5px rgba(0,0,0,0.4);
+                font-variant: small-caps;
+                font-size: 2em;
                 font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
             }
 
@@ -131,7 +162,7 @@
         <div class="mainContainer" style="filter: blur(10px);" id="mainContainer">
             <div class="splash">
                 <div class="titleText">
-                    <h1>Ablation Based Counterfactual</h1>
+                    <h1>Ablation Based Counterfactuals</h1>
                 </div>
                 <div class="titleText">
                     <h4>Zheng Dai<sup>1</sup>, David K Gifford<sup>1</sup></h4>
@@ -140,24 +171,42 @@
                     <h5><sup>1</sup>Computer Science and Artificial Intelligence Laboratory, Massachusetts Institute of Technology</h5>
                 </div>
                 <div style="border-top: solid 2px rgba(0,0,0,1); height: 0.5em; width: 100%;"></div>
-                <div class="abstract">
-                    <h3>Overview</h3>
+                <div class="section abstract">
+                    <h2>Abstract</h2>
+                    <h3>Motivation</h3>
                     <p>
-                        We present ablation as an alternative to retraining as a paradigm for computing counterfactuals. Please see the links below for our work. We are still in the process of uploading more recent work, so please check back soon for an update!
+                        We tackle the challenge of analyzing the relationship between diffusion models and their training data. Diffusion models are a class of generative models that generate high-quality samples, but at present it is difficult to characterize how they depend upon their training data due to the complexity of these models and their sampling process. The analysis of this dependence has both scientific and regulatory applications due to the widespread adoption of these models.
+                    </p>
+                    <h3>Our Contributions</h3>
+                    <ul>
+                        <li>We introduce <em>Ablation Based Counterfactuals</em> (ABC), a method of performing counterfactual analysis that relies on model ablation rather than model retraining, enabling us to analyze the extremely complex relationship between diffusion models and their training data.</li>
+                        <li>We show that we can train a model that can be ablated without loss of function by training an ensemble of diffusion models.</li>
+                        <li>We use ablation to study the limits of training data attribution by enumerating full counterfactual landscapes, and show that single source attributability diminishes with increasing training data size, culminating in <em>unattributable samples</em>, whose existence we demonstrate.</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <h2>Technical Details</h2>
+                    <p>
+                        Instead of training a single model on the entire training dataset, we train sets of model parameters <em>independently</em> on different <em>subsets</em> of the training dataset. These independently trained parameters are then combined into a single model. If we then use the overall model to generate a sample (e.g. a picture), we can remove the causal influence of any given piece of training data by removing all parameters of the model that were trained on it. Once this causal influence is removed, we can regenerate the sample to produce a <em>counterfactual sample</em>, a sample that would have been generated if the model had been trained on an incomplete dataset that lacked the piece of training data in question. The counterfactual can then be compared with the <em>factual sample</em> generated by the original unablated model to assess the effect of that piece of training data.
+                    </p>
+                    <p>
+                        A way of creating such a model is to train a set of models and combine them into an ensemble, where the ensemble output is the arithmetic mean of the outputs of its members.
                     </p>
                 </div>
+
                 <div style="border-bottom: solid 2px rgba(0,0,0,1); height: 0.1em; width: 100%;"></div>
                 <div style="border-bottom: solid 1px rgba(0,0,0,1); height: 0.5em; width: calc(100% - 2em);"></div>
                 <div style="display: flex; flex-direction: row; justify-content: center; padding-top: 3em;">
                     <a href="https://arxiv.org/pdf/2306.02174.pdf">
                         <div class="button">
-                            Check out an earlier iteration of our preprint here
+                            An earlier iteration of our preprint is available here
                         </div>
                     </a>
                     <div style="width:2em;"></div>
                     <a href="https://github.com/zheng-dai/GenEns">
                         <div class="button">
-                            Code and data for our prior work relating to this work are availabile here
+                            Scripts that can replicate part of our work are availabile here
                         </div>
                     </a>
                 </div>
