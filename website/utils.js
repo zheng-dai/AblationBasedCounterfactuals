@@ -95,7 +95,7 @@ function makeNoiseObj(width, height, sigma){
             const v = Math.random();
             const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v )
             //brownian motion
-            floatbuffer[len] = Math.max(Math.min( ((bufferFloat[len] + (z*sigma) - 0.5)*0.95) + 0.5, 0.8 ), 0.2);
+            floatbuffer[len] = Math.max(Math.min( ((floatbuffer[len] + (z*sigma) - 0.5)*0.95) + 0.5, 0.8 ), 0.2);
             const intBuffer = ( (Math.floor(floatbuffer[len] * 256)) % 256 ) >>> 0;
             buffer[len] = (intBuffer<<0) | (intBuffer<<16) | (intBuffer<<8) | ((255>>>0)<<24);
         }
@@ -129,31 +129,40 @@ function makeNoiseObj2(width, height, sigma){
 
     const idata = ctx.createImageData(width, height);
     const buffer = new Uint32Array(idata.data.buffer);
-    const floatbuffer = [];
+    const floatbuffer1 = [];
+    const floatbuffer2 = [];
+    const floatbuffer3 = [];
     for (let i = 0; i < buffer.length; i++){
-        floatbuffer.push(0);
+        floatbuffer1.push(0);
+        floatbuffer2.push(0);
+        floatbuffer3.push(0);
     }
 
     noiseObj.img = canvas;
     noiseObj.step = () => {
         let len = buffer.length - 1;
         while(len--){
-            //draw normal rv
-            const u = 1 - Math.random();
-            const v = Math.random();
-            const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v )
-            //brownian motion
-            floatbuffer[len] = Math.max(Math.min( ((bufferFloat[len] + (z*sigma) - 0.5)*0.95) + 0.5, 0.8 ), 0.2);
-            const intBuffer = ( (Math.floor(floatbuffer[len] * 256)) % 256 ) >>> 0;
-            const intBuffer2 = ( (Math.floor(floatbuffer[ (len+723)%buffer.length ] * 256)) % 256 ) >>> 0;
-            const intBuffer3 = ( (Math.floor(floatbuffer[ (len+1582)%buffer.length ] * 256)) % 256 ) >>> 0;
-            buffer[len] = (intBuffer<<0) | (intBuffer2<<16) | (intBuffer3<<8) | ((255>>>0)<<24);
+            for (let i = 0; i < 3; i++){
+                //draw normal rv
+                const u = 1 - Math.random();
+                const v = Math.random();
+                const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v )
+                const floatbuffer = [floatbuffer1, floatbuffer2, floatbuffer3][i];
+                //brownian motion
+                floatbuffer[len] = Math.max(Math.min( ((floatbuffer[len] + (z*sigma) - 0.5)*0.95) + 0.5, 0.8 ), 0.2);
+            }
+            const intBuffer1 = ( (Math.floor(floatbuffer1[len] * 256)) % 256 ) >>> 0;
+            const intBuffer2 = ( (Math.floor(floatbuffer2[len] * 256)) % 256 ) >>> 0;
+            const intBuffer3 = ( (Math.floor(floatbuffer3[len] * 256)) % 256 ) >>> 0;
+            buffer[len] = (intBuffer1<<0) | (intBuffer2<<16) | (intBuffer3<<8) | ((255>>>0)<<24);
         }
         ctx.putImageData(idata, 0, 0);
     }
     noiseObj.init = () => {
         for (let i = 0; i < buffer.length; i++){
-            floatbuffer[i] = (Math.random()*0.1) + 0.45;
+            floatbuffer1[i] = (Math.random()*0.1) + 0.45;
+            floatbuffer2[i] = (Math.random()*0.1) + 0.45;
+            floatbuffer3[i] = (Math.random()*0.1) + 0.45;
         }
         noiseObj.step();
     }
