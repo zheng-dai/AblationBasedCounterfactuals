@@ -26,6 +26,12 @@ function interpolate_cosine(p)
     return p2;
 }
 
+function interpolate_cosine2(p)
+{
+    const p2 = (Math.cos(p*Math.PI) - 1)/2;
+    return -p2;
+}
+
 function interpolate_square(p)
 {
     const p2 = 1-Math.pow(1-p, 2);
@@ -92,6 +98,56 @@ function makeNoiseObj(width, height, sigma){
             floatbuffer[len] = Math.max(Math.min( ((bufferFloat[len] + (z*sigma) - 0.5)*0.95) + 0.5, 0.8 ), 0.2);
             const intBuffer = ( (Math.floor(floatbuffer[len] * 256)) % 256 ) >>> 0;
             buffer[len] = (intBuffer<<0) | (intBuffer<<16) | (intBuffer<<8) | ((255>>>0)<<24);
+        }
+        ctx.putImageData(idata, 0, 0);
+    }
+    noiseObj.init = () => {
+        for (let i = 0; i < buffer.length; i++){
+            floatbuffer[i] = (Math.random()*0.1) + 0.45;
+        }
+        noiseObj.step();
+    }
+    noiseObj.init();
+    return noiseObj;
+}
+
+function calcMean(x){
+    let total = 0;
+    for (let i = 0; i < x.length; i++){
+        total += x[i];
+    }
+    return total/x.length;
+}
+
+function makeNoiseObj2(width, height, sigma){
+    const noiseObj = {};
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+
+    const idata = ctx.createImageData(width, height);
+    const buffer = new Uint32Array(idata.data.buffer);
+    const floatbuffer = [];
+    for (let i = 0; i < buffer.length; i++){
+        floatbuffer.push(0);
+    }
+
+    noiseObj.img = canvas;
+    noiseObj.step = () => {
+        let len = buffer.length - 1;
+        while(len--){
+            //draw normal rv
+            const u = 1 - Math.random();
+            const v = Math.random();
+            const z = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v )
+            //brownian motion
+            floatbuffer[len] = Math.max(Math.min( ((bufferFloat[len] + (z*sigma) - 0.5)*0.95) + 0.5, 0.8 ), 0.2);
+            const intBuffer = ( (Math.floor(floatbuffer[len] * 256)) % 256 ) >>> 0;
+            const intBuffer2 = ( (Math.floor(floatbuffer[ (len+723)%buffer.length ] * 256)) % 256 ) >>> 0;
+            const intBuffer3 = ( (Math.floor(floatbuffer[ (len+1582)%buffer.length ] * 256)) % 256 ) >>> 0;
+            buffer[len] = (intBuffer<<0) | (intBuffer2<<16) | (intBuffer3<<8) | ((255>>>0)<<24);
         }
         ctx.putImageData(idata, 0, 0);
     }

@@ -11,12 +11,29 @@ figure2.forcerender = true;
 figure2.noise = makeNoiseObj(32, 32, 0.1);
 figure2.noisealpha = 0;
 figure2.noisealphamax = 16;
+figure2.highlightcolor = "red";
+figure2.simplify = true;
+figure2.simplanim = 0;
 
 document.getElementById("figure2_button").addEventListener("click", ()=>{
     figure2.generateindex = (figure2.generateindex + 1)%3;
     figure2.noisealpha = figure2.noisealphamax;
     figure2.forcerender = true;
     figure2.noise.init();
+});
+
+figure2.button2 = document.getElementById("figure2_button2");
+figure2.textspan = document.getElementById("figure2_info");
+figure2.button2.addEventListener("click", ()=>{
+    figure2.simplify = !figure2.simplify;
+    if (figure2.simplify) {
+        figure2.textspan.innerText = "only 10 training digits";
+        figure2.button2.innerText = "click here to show all 384";
+    }
+    else {
+        figure2.textspan.innerText = "all 384 training digits";
+        figure2.button2.innerText = "click here to show less";
+    }
 });
 
 figure2.canvas.addEventListener("mouseenter", (e)=>{
@@ -107,17 +124,46 @@ figure2.drawCounterfactual2 = (i, j, xy, s) => {
 figure2.drawFrame = (xy, s) => {
     const x = xy[0];
     const y = xy[1];
-    figure2.ctx.strokeStyle = "red";
+    figure2.ctx.strokeStyle = figure2.highlightcolor;
     figure2.ctx.strokeRect(x-s/2, y-s/2, s, s);
+}
+
+figure2.isSimple = (i) => {
+    const arr = [0, 35, 73, 107, 138, 181, 221, 264, 312, 350];
+    for (let j = 0; j < 10; j++){
+        if (i == arr[j]) return true
+    }
+    return false;
+}
+
+figure2.simpleloc = (i) => {
+    const arr = [0, 35, 73, 107, 138, 181, 221, 264, 312, 350];
+    for (let j = 0; j < 10; j++){
+        if (i == arr[j]){
+            const yloc = (j - 4.5);
+            return [140, yloc * 64 + 500];
+        }
+    }
+    return [140, 500];
+    //const y = (figure2.training_xyloc_org[i][1] - 500)*0.8 + 500 + (((i*37)%59)/58 - 0.5) * 80;
+    //const x = 140 + ((( (i+1) *19)%59)/58 - 0.5) * 80
+    //const y = (figure2.training_xyloc_org[i][1] - 500)*((16 + (i%16))/40) + 500;
+    //const x = (figure2.training_xyloc_org[i][0] - 70)*0.3 + 70;
+    //const x = figure2.training_xyloc_org[i][0]/10 + 100;
+    //const x = (figure2.training_xyloc_org[i][0] - 140)*0.5 + 140;
+    //const y = (figure2.training_xyloc_org[i][1] - 500)*0.5 + 500;
+    //return [x, y]; //[340, 500];//figure2.training_xyloc_org[ (i+1) % 384];
 }
 
 figure2.check = () => {
     figure2.selected = -1;
     if (figure2.mousein){
         for (let i = 0; i < 384; i++){
+            if (!figure2.isSimple(i) && figure2.simplify) continue;
+            const radius = (figure2.isSimple(i) && figure2.simplify) ? 32 : 20;
             const x = figure2.training_xyloc[i][0];
             const y = figure2.training_xyloc[i][1];
-            if (Math.abs(x - figure2.mousexy[0]) <= 20 && Math.abs(y - figure2.mousexy[1]) <= 20){
+            if (Math.abs(x - figure2.mousexy[0]) <= radius && Math.abs(y - figure2.mousexy[1]) <= radius){
                 figure2.selected = i;
             }
         }
@@ -126,6 +172,15 @@ figure2.check = () => {
     let update = figure2.forcerender;
     figure2.forcerender = false;
     
+    if (figure2.simplify && figure2.simplanim > 0){
+        figure2.simplanim = Math.max(figure2.simplanim-0.15, 0);
+        update = true;
+    }
+    if (!figure2.simplify && figure2.simplanim < 1){
+        figure2.simplanim = Math.min(figure2.simplanim+0.15, 1);
+        update = true;
+    }
+
     if (figure2.noisealpha > 0){
         figure2.noisealpha = figure2.noisealpha-1;
         figure2.noise.step();
@@ -136,21 +191,40 @@ figure2.check = () => {
         const z = figure2.renderorder[i][0];
         const j = figure2.renderorder[i][1];
 
-        if (!figure2.mousein || figure2.selected < 0){
-            if (figure2.natural_z[j] != z){
+        if (figure2.simplify) {
+            const simplxy = figure2.simpleloc(j);
+            figure2.training_xyloc_true[j][0] = simplxy[0];
+            figure2.training_xyloc_true[j][1] = simplxy[1];
+        } else {
+            figure2.training_xyloc_true[j][0] = figure2.training_xyloc_org[j][0];
+            figure2.training_xyloc_true[j][1] = figure2.training_xyloc_org[j][1];
+        }
+        for (let ii = 0; ii < 2; ii++){
+            if (figure2.training_xyloc[j][ii] != figure2.training_xyloc_true[j][ii]){
                 update = true;
-                if (Math.abs(figure2.natural_z[j] - z) < 0.05){
-                    figure2.renderorder[i][0] = figure2.natural_z[j];
+                figure2.training_xyloc[j][ii] = (figure2.training_xyloc[j][ii] + figure2.training_xyloc_true[j][ii])/2;
+                if (Math.abs(figure2.training_xyloc[j][ii] - figure2.training_xyloc_true[j][ii]) < 1)
+                    figure2.training_xyloc[j][ii] = figure2.training_xyloc_true[j][ii];
+            }
+        }
+
+        const simpl = (!figure2.isSimple(j) && figure2.simplify) ? 0 : 1;
+        if (!figure2.mousein || figure2.selected < 0){
+            const tgtsize = ( (figure2.simplify && figure2.simpleloc(i)) ? 0.8 : figure2.natural_z[j] ) * simpl;
+            if (tgtsize != z){
+                update = true;
+                if (Math.abs(tgtsize - z) < 0.05){
+                    figure2.renderorder[i][0] = tgtsize;
                 }
                 else {
-                    figure2.renderorder[i][0] = (figure2.natural_z[j] + z)/2;
+                    figure2.renderorder[i][0] = (tgtsize + z)/2;
                 }
             }
         }
         else {
             const xy = figure2.training_xyloc[j];
             const dist = distance_sq(xy, figure2.mousexy);
-            const z_target = Math.exp(-dist/100000);
+            const z_target = Math.exp(-dist/50000) * simpl;
             
             if (figure2.selected == j && z != 1){
                 figure2.renderorder[i][0] = 1;
@@ -201,27 +275,35 @@ figure2.loop = () => {
         const i = figure2.renderorder[pre_i][1];
         const z = figure2.selected == i ? 1 : figure2.renderorder[pre_i][0];
 
-        const size = z*16 + 24;
+        const size = (z*16 + 24) * (figure2.isSimple(i) ? 1.6-(figure2.simplanim*0.6) : figure2.simplanim);
         const brightness = (i == figure2.erased) ? 0 : z/2 + 0.5;
 
         let segments = 20;
+        let skipsegments = false;
         if (figure2.selected != i){
             figure2.ctx.lineWidth =  1;
             figure2.ctx.strokeStyle = "black";
-            figure2.ctx.globalAlpha = z*0.3 + 0.2;
+            figure2.ctx.globalAlpha = z*0.2 + ((figure2.isSimple(i)) ? (1-figure2.simplanim)*0.2 + 0.1 : figure2.simplanim * figure2.simplanim * 0.1);
+            if (figure2.simplanim == 0) {
+                if (figure2.isSimple(i)) figure2.ctx.globalAlpha = 0.5;
+                else skipsegments = true;
+            }
         }
         else {
-            figure2.ctx.strokeStyle = "red";
+            figure2.ctx.strokeStyle = figure2.highlightcolor;
             figure2.ctx.globalAlpha = 1;
             figure2.ctx.lineWidth =  8;
             figure2.drawFrame(figure2.training_xyloc[i], size);
-            figure2.ctx.lineWidth =  3;
+            figure2.ctx.lineWidth =  5;
             segments = 100;
         }
-        const targets = figure2_edges[i];
-        for (let j = 0; j < targets.length; j++){
-            const k = targets[j];
-            if (!figure2.ablated[k]) figure2.lineto(figure2.training_xyloc[i], figure2.param_xyloc[k], segments);
+
+        if (!skipsegments){
+            const targets = figure2_edges[i];
+            for (let j = 0; j < targets.length; j++){
+                const k = targets[j];
+                if (!figure2.ablated[k]) figure2.lineto(figure2.training_xyloc[i], figure2.param_xyloc[k], segments);
+            }
         }
         figure2.ctx.globalAlpha = 1;
         figure2.drawTraining(i, figure2.training_xyloc[i], size, brightness);
@@ -235,8 +317,8 @@ figure2.loop = () => {
             for (let j = 0; j < figure2_edges[figure2.selected].length; j++){
                 if (i == figure2_edges[figure2.selected][j]){
                     figure2.ctx.lineWidth = 5;  
-                    figure2.ctx.strokeStyle = "red";
-                    figure2.ctx.fillStyle = "red";
+                    figure2.ctx.strokeStyle = figure2.highlightcolor;
+                    figure2.ctx.fillStyle = figure2.highlightcolor;
                     if (!figure2.ablated[i]) flow = true;
                     break;
                 }
@@ -250,8 +332,8 @@ figure2.loop = () => {
         figure2.ctx.fillStyle = "black";
         figure2.ctx.lineWidth = 5;
     } else {
-        figure2.ctx.strokeStyle = "red";
-        figure2.ctx.fillStyle = "red";
+        figure2.ctx.strokeStyle = figure2.highlightcolor;
+        figure2.ctx.fillStyle = figure2.highlightcolor;
         figure2.ctx.lineWidth = 9;
         figure2.drawFrame(figure2.generate_xy, 64);
     }
@@ -260,7 +342,7 @@ figure2.loop = () => {
     figure2.drawCircle(figure2.combined_xy, figure2.abltrue[16]);
     figure2.drawCounterfactual2(figure2.erased + 1, figure2.generateindex, figure2.generate_xy, 64);
 
-    setTimeout(() => requestAnimationFrame(figure2.loop, false), 80);
+    setTimeout(() => requestAnimationFrame(figure2.loop, false), 50);
 }
 
 figure2.lineto = (xy1, xy2, segments) => {
@@ -283,6 +365,8 @@ figure2.init = () => {
         const xcenter = 340;
         const ycenter = 500;
         figure2.training_xyloc = [];
+        figure2.training_xyloc_true = [];
+        figure2.training_xyloc_org = [];
         figure2.sizes = [];
         figure2.natural_z = [];
         figure2.renderorder = [];
@@ -292,6 +376,8 @@ figure2.init = () => {
             const x = xcenter + (x_raw-7.5)*40;
             const y = ycenter + (y_raw-11.5)*40;
             figure2.training_xyloc.push([x, y]);
+            figure2.training_xyloc_true.push([x, y]);
+            figure2.training_xyloc_org.push([x, y]);
             figure2.sizes.push(32);
 
             const ydelta = (1-Math.pow((y_raw-11.5)/11.5, 2))*0.2;
