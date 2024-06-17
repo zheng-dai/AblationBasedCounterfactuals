@@ -8,7 +8,6 @@
                 flex-direction: column;
                 align-content: center;
                 padding-top: 10vh;
-                padding-bottom: 30vh;
             }
 
             .splash {
@@ -232,10 +231,116 @@
                 color: rgba(128,128,128,1);
                 background-color: rgba(0,0,0,0);
                 transition: color 0.2s linear, background-color 0.2s linear;
+                text-decoration: underline;
             }
             .clickable:hover {
                 color: white;
                 background-color: rgba(0,0,0,1);
+            }
+
+            .figure1subpanel {
+                width: 100%;
+                aspect-ratio: 1;
+            }
+            .figure1subpanel>div {
+                width: 90%;
+                margin: calc(5% - 3px);
+                border: solid 3px black;
+                border-radius: 10%;
+                aspect-ratio: 1;
+                overflow: hidden;
+                opacity: 1;
+                transition: opacity 0.3s ease-out, width 0.3s ease-out, margin 0.3s ease-out;
+            }
+            .figure1subpanel:hover>div {
+                margin: calc(40% - 3px);
+                width: 20%;
+                opacity: 0;
+            }
+            .figure1subpanel>div>div {
+                width: 300%;
+                height: 500%;
+                position: relative;
+                background-image: url("website/image.png");
+                background-size: cover;
+            }
+
+            .figure1subpanel_non_interactive {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+            .figure1subpanel_non_interactive>canvas {
+                width: 100%;
+            }
+            .figure1subpanel_non_interactive>div {
+                position: relative;
+                left: 5%;
+                width: 90%;
+                height: 80%;
+                margin: 0;
+                overflow: hidden;
+            }
+            .figure1subpanel_non_interactive>div>div {
+                width: 333%;
+                height: 625%;
+                top: -512.5%;
+                left: -5.5%;
+                position: relative;
+                background-image: url("website/image.png");
+                background-size: cover;
+            }
+
+            .figure1subpanel_rightend {
+                position: relative;
+                width: 100%;
+            }
+            .figure1subpanel_rightend>div {
+                width: 100%;
+                margin: 0;
+                border: solid 3px black;
+                border-radius: 10%;
+                aspect-ratio: 1;
+                overflow: hidden;
+                opacity: 0;
+                transition: opacity 0.5s ease-in-out;
+            }
+            .figure1subpanel_rightend>div>div {
+                width: 300%;
+                height: 500%;
+                top: -300%;
+                position: relative;
+                background-image: url("website/image.png");
+                background-size: cover;
+            }
+            .figure1subpanel_rightend:has(+ .figure1subpanel:hover)>div {
+                opacity: 1;
+            }
+
+            .figaxes>div {
+                font-size: 0.8em;
+                font-family: 'Times New Roman', serif;
+                font-style: italic;
+                height: 1em;
+            }
+            .figaxes2>div {
+                font-size: 1.2em;
+                font-family: 'Times New Roman', serif;
+                font-style: italic;
+                height: 1.4em;
+            }
+
+            a.footer:link, a.footer:visited {
+            word-break: break-all;
+            color: inherit;
+            }
+
+            a.footer:hover, a.footer:active {
+                word-break: break-all;
+                color: white;
             }
         </style>
     </head>
@@ -279,18 +384,173 @@
                     <p>
                         Performing counterfactual analysis by retraining models on incomplete datasets is extremely computationally expensive. Explore an entire <em>counterfactual landscape</em> (i.e. all possible counterfactual samples that can be produced by leaving out one piece of training data), which we need to do in order to fully understand the contributions of all parts of the training dataset, is effectively impossible.
                     </p>
-                    <h3>Computing Counterfactual Samples Efficiently Via Ablation</h3>
+                    <div class="figure">
+                        <div style='padding-bottom: 1em; display: grid; grid-template-columns: repeat(4, 1fr) 2fr 1fr 2fr; grid-template-rows: repeat(3, 1fr); column-gap: 0em; row-gap: 0em; align-content: center; justify-content: space-between; justify-items: center; align-items: center; grid-template-areas: "a b c . k . m" "d e f j k l m" "g h i . k . m";'>
+
+                            <div style="grid-area: j;" class="figure1subpanel_non_interactive">
+                                <div><div></div></div>
+                            </div>
+                            <div style="grid-area: k;" class="figure1subpanel_non_interactive">
+                                <canvas id="figure1" width="512" height="512"></canvas>
+                            </div>
+                            <div style="grid-area: l;" class="figure1subpanel_non_interactive">
+                                <div><div></div></div>
+                            </div>
+                            <div style="grid-area: m;" class="figure1subpanel_rightend">
+                                <div style="opacity: 1;"><div style="left: 0%;"></div></div>
+                            </div>
+                            
+                            
+                            <div style="grid-area: m;" class="figure1subpanel_rightend">
+                                <div><div style="left: -200%;"></div></div>
+                            </div>
+                            <div style="grid-area: a;" class="figure1subpanel">
+                                <div><div style="left: 0%; top: 0%"></div></div>
+                            </div>
+
+                            <div style="grid-area: m;" class="figure1subpanel_rightend">
+                                <div><div style="left: -200%; top: -400%;"></div></div>
+                            </div>
+                            <div style="grid-area: b;" class="figure1subpanel">
+                                <div><div style="left: -100%; top: 0%"></div></div>
+                            </div>
+
+                            <div style="grid-area: m;" class="figure1subpanel_rightend">
+                                <div><div style="left: -200%;"></div></div>
+                            </div>
+                            <div style="grid-area: c;" class="figure1subpanel">
+                                <div><div style="left: -200%; top: 0%"></div></div>
+                            </div>
+
+
+                            <div style="grid-area: m;" class="figure1subpanel_rightend">
+                                <div><div style="left: -100%;"></div></div>
+                            </div>
+                            <div style="grid-area: d;" class="figure1subpanel">
+                                <div><div style="left: 0%; top: -100%"></div></div>
+                            </div>
+
+                            <div style="grid-area: m;" class="figure1subpanel_rightend">
+                                <div><div style="left: -100%; top: -400%;"></div></div>
+                            </div>
+                            <div style="grid-area: e;" class="figure1subpanel">
+                                <div><div style="left: -100%; top: -100%"></div></div>
+                            </div>
+
+                            <div style="grid-area: m;" class="figure1subpanel_rightend">
+                                <div><div style="left: -100%;"></div></div>
+                            </div>
+                            <div style="grid-area: f;" class="figure1subpanel">
+                                <div><div style="left: -200%; top: -100%"></div></div>
+                            </div>
+
+
+                            <div style="grid-area: m;" class="figure1subpanel_rightend">
+                                <div><div style="left: -200%;"></div></div>
+                            </div>
+                            <div style="grid-area: g;" class="figure1subpanel">
+                                <div><div style="left: 0%; top: -200%"></div></div>
+                            </div>
+
+                            <div style="grid-area: m;" class="figure1subpanel_rightend">
+                                <div><div style="left: -100%;"></div></div>
+                            </div>
+                            <div style="grid-area: h;" class="figure1subpanel">
+                                <div><div style="left: -100%; top: -200%"></div></div>
+                            </div>
+
+                            <div style="grid-area: m;" class="figure1subpanel_rightend">
+                                <div><div style="left: -200%;"></div></div>
+                            </div>
+                            <div style="grid-area: i;" class="figure1subpanel">
+                                <div><div style="left: -200%; top: -200%"></div></div>
+                            </div>
+                        </div>
+                        <p><b>Figure 1.</b> Cartoon illustration of the causal relationship between the training data and the final generated sample. The training data (left) is used to train a model (middle), which is then used to generate a sample (right). Hover over the training set to samples from the training data. Removing samples leads to changes in the final generated sample. The changes in the final generated sample can be used to infer what the model learned from the training data.
+                    </div>
+
+                    <h3>Computing Counterfactual Samples Efficiently via Ablation</h3>
                     <p>
                         Instead of training a single model on the entire training dataset, we train sets of model parameters <em>independently</em> on different <em>subsets</em> of the training dataset. These independently trained parameters are then combined into a single model. If we then use the overall model to generate a sample, we can remove the causal influence of any given piece of training data by removing all parameters of the model that were trained on it. Since this ablated model has effectively never seen the training data that we removed, we can use it to generate counterfactual samples for counterfactual analysis.
                     </p>
                     <p>
                         A way of creating an ablatable model is to train a set of models and combine them into an ensemble, where the ensemble output is the arithmetic mean of the outputs of its members.
                     </p>
-
                     <div class="figure">
                         <canvas id="figure2" width="1400" height="1000"></canvas>
-                        <p><b>Figure 1.</b> Hover over the training set to highlight in red the flow of the causal influence from the training data (left) to the independently trained model parameters (small circles) to the combined model (large circle) to the generated sample (right). Click a member of the training set on the left to remove it via albation, and click it again to unablate. Note how the flow of causal influence is broken, and how it is not broken for any other member of the training dataset.<span class="clickable" id="figure2_button"> Click here to generate a different image.</span></p>
+                        <p><b>Figure 2.</b> Using ablation to compute counterfactuals with a digit generator trained on 384 digits (<span id="figure2_info">only 10 training digits</span> are shown on the left, <span class="clickable" id="figure2_button2">click here to show all 384</span>).
+                            Hover over the training set on the left to highlight in red the flow of the causal influence from the training data (left) to the independently trained model parameters (small circles) to the combined model (large circle) to the generated sample (right). Click a member of the training set on the left to remove it via albation, and click it again to unablate. Note how the flow of causal influence is broken, and how it is not broken for any other member of the training dataset. <span class="clickable" id="figure2_button">Click here to generate a different image</span>.</p>
                     </div>
+                </div>
+
+                <div class="section">
+                    <h2>Results</h2>
+                    
+                    <h3>Ensembles of Diffusion Models are Viable Image Generators</h3>
+                    <p>
+                        In order to use ablation, we must construct a model with sufficient redundancy where groups of paramters can be ablated without loss of function. An ensemble of identical model architectures fulfills this requirement, where the output of the ensemble is the arithmetic average of the model outputs. We find that such ensembles of diffusion models are viable image generators.
+                    </p>
+                    <div class="figure">
+                        <div style="width: 80%; margin-left: 10%; aspect-ratio: 9; overflow: hidden; background-color: black; position: relative;">
+                            <div style="width: 100%; aspect-ratio: 9; position: absolute;" id="figure4background">
+                                <div style = "width: 100%; position: absolute; top: -0%; aspect-ratio: 1.8; background-image: url(website/samples.png); background-size: cover; image-rendering: crisp-edges; image-rendering: pixelated;" id="figure4background2"></div>
+                            </div>
+                            <canvas width="2304" height="512" style="width: 100%; position: absolute;" id="figure4"></canvas>
+                        </div>
+                        <p><b>Figure 3.</b> Examples of images that were sampled by diffusion model ensembles. Each image was generated by a different ensemble. <span class="clickable" id="figure4_button">Click here to generate different images</span>.</p>
+                    </div>
+
+                    <h3>Attributability Diminishes with Training Dataset Size</h3>
+                    <p>
+                        If the counterfactual landscape consists of samples that are all similar to the generated sample, then we must conclude that no training sample contributed significantly to the generation of that sample. We operationalize this notion of <em>diminished attributability</em> by defining the <em>counterfactual radius</em>: the largest possible distance between a generated sample and a counterfactual sample. Another way of understanding the counterfactual radius is that there exists no counterfactual sample that lies outside the ball surrounding the original sample whose radius is the counterfactual radius. A low counterfactual radius corresponds with low attributability.
+                    </p>
+                    <p>
+                        We compute the counterfactual radius of generated samples for 23 different models that were trained on varying datasets, and find that there is a strong negative relationship between the training set size and the counterfactual radius.
+                    </p>
+                    <div class="figure">
+                        <div style='width: 60%; margin-left: 20%; display: grid; grid-template-columns: auto auto 0.5fr 20fr; grid-template-rows: 20fr 0.5fr auto auto; column-gap: 0em; row-gap: 0em; align-content: center; justify-content: space-between; justify-items: center; align-items: center; grid-template-areas: "a b c d" ". . . e" ". . . f" ". . . g"; margin-bottom: 3em;'>
+                            <canvas id="figure3" width="1000" height="1000" style="grid-area: d; width: 100%; border-left: solid 2px black; border-bottom: solid 2px black;"></canvas>
+                            <div style="grid-area: c; display: flex; flex-direction: column; width: 100%; height: 100%">
+                                <div style="height: 20%; border-bottom: solid 2px black;"></div>
+                                <div style="height: 66%; border-bottom: solid 2px black; margin-top: -2px"></div>
+                            </div>
+                            <div style="grid-area: e; display: flex; flex-direction: row; width: 100%; height: 100%">
+                                <div style="width: 6.25%; border-right: solid 2px black;"></div>
+                                <div style="width: 25%; border-right: solid 2px black; margin-left: -2px"></div>
+                                <div style="width: 25%; border-right: solid 2px black; margin-left: -2px"></div>
+                                <div style="width: 25%; border-right: solid 2px black; margin-left: -2px"></div>
+                            </div>
+
+                            <div style="grid-area: b; display: flex; flex-direction: column; width: 100%; height: 100%" class="figaxes">
+                                <div style="height: 20%; text-align: right; display: flex; flex-direction: column-reverse;">100</div>
+                                <div style="height: 66%; text-align: right; display: flex; flex-direction: column-reverse;">10</div>
+                            </div>
+                            <div style="grid-area: f; display: flex; flex-direction: row; width: 100%; height: 100%" class="figaxes">
+                                <div style="width: 25%; margin-left: 6.25%;">100</div>
+                                <div style="width: 25%;">1000</div>
+                                <div style="width: 25%;">10000</div>
+                                <div style="width: 18.75%;">100000</div>
+                            </div>
+
+                            <div style="grid-area: g; text-align: center; width: 100%;" class = "figaxes2"><div>Dataset Size</div></div>
+                            <div style="grid-area: a; height: 100%; width: 1.5em; display: flex; flex-direction: column; align-items: center; justify-content: center;" class = "figaxes2">
+                                <div style="transform: rotate(270deg); transform-origin: center center; height: 1.5em; white-space: nowrap;">Counterfactual Radius</div>
+                            </div>
+                        </div>
+                        <p><b>Figure 4.</b> The counterfactual radius is negatively correlated with the training data size. Given a model, we plot the training set size on the x-axis. We plot the geometric mean of the counterfactual radii of the samples generated by the model on the y-axis. Hover over a point to expand it into a box and strip plot of the individual samples before their geomteric means were taken <span style="opacity: 0.3;">(note that the x coordinate of the strip plot points are meaningless)</span> and to see the size of the samples' counterfactual landscape and the dataset that was used to train it.
+                        <span style="opacity: 0.3;">The size of the counterfactual landscape does not always match the training set size, since for some datasets we remove multiple samples at once (for example, for CelebA datasets we remove all samples that correspond to a single individual at once). Counterfactual radii are measured in Euclidean distance, and all images were scaled to 256-by-256 and 3 channels to ensure consistency between datasets.</span></p>
+                    </div>
+
+                    <h3>Samples can be Unattributable</h3>
+                    <p>
+                        It is possible for the counterfactual radius to be <em>zero</em>. This can occur when we sample from discrete spaces, such as handwritten digits where each pixel value is either black or white. We refer to a sample with a zero counterfactual radius as <em>unattributable</em>, since for every training sample, we can produce a counterfactual sample that certifies that the outcome of the sampling process would be entirely unchanged if that training sample had not existed.
+                    </p>
+
+                    <div class="figure">
+                        <div style="width: 80%; margin-left: 10%; aspect-ratio: 3.5; background-image: url(website/unattributable.png); background-size: cover; image-rendering: crisp-edges; image-rendering: pixelated;"></div>
+                        <p><b>Figure 5.</b> Examples of unattributable samples generated from a model that generates binary images of handwritten digits.</p>
+                    </div>
+
                 </div>
 
                 <div style="border-bottom: solid 2px rgba(0,0,0,1); height: 0.1em; width: 100%;"></div>
@@ -298,23 +558,29 @@
                 <div style="display: flex; flex-direction: row; justify-content: center; padding-top: 3em;">
                     <a href="https://arxiv.org/abs/2406.07908">
                         <div class="button">
-                            Check out the preprint here
+                            Check out the preprint for more details
                         </div>
                     </a>
                     <div style="width:2em;"></div>
                     <a href="https://github.com/zheng-dai/GenEns">
                         <div class="button">
-                            Scripts availabile here
+                            Scripts for running the experiments
                         </div>
                     </a>
                 </div>
                 <div style="height:3em;"></div>
+            </div>
+            <div style="height: 30vh;"></div>
+            <div style="width: 100%; background-color: black; color: silver; text-align: right;">
+                <h2 style="margin-top: 0.4em; margin-bottom: 0; padding-right: 1em; font-variant: small-caps; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 1.4em;">Citation</h2>
+                <p style="margin-top: 0.2em; margin-bottom: 1.6em; padding-right: 2em; font-family: Arial, Helvetica, sans-serif; font-size: 0.8em;">"Z. Dai and D. Gifford. "Ablation Based Counterfactuals.". In: <em>ArXiv.</em> 2024.  <span style="font-variant: small-caps;">url:</span> <a class="footer" href="https://arxiv.org/abs/2406.07908" style="text-decoration: none;">https://arxiv.org/abs/2406.07908</a>."</p>
             </div>
         </div>
 
         <script>
             
             var animate = -3;
+            var animate = 5;
             var cover = document.getElementById("cover");
             cover.style.setProperty("opacity", 1);
 
@@ -378,6 +644,10 @@
         </script>
         <script src="website/utils.js"></script>
         <script src="website/edges.js"></script>
+        <script src="website/boxplot.js"></script>
+        <script src="website/figure1.js"></script>
         <script src="website/figure2.js"></script>
+        <script src="website/figure3.js"></script>
+        <script src="website/figure4.js"></script>
     </body>
 </html>
