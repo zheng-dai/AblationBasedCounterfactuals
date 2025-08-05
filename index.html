@@ -261,8 +261,9 @@
                 width: 300%;
                 height: 500%;
                 position: relative;
-                background-image: url("website/image.png");
+                background-image: url("website/image2.png");
                 background-size: cover;
+                image-rendering: pixelated;
             }
 
             .figure1subpanel_non_interactive {
@@ -313,8 +314,9 @@
                 height: 500%;
                 top: -300%;
                 position: relative;
-                background-image: url("website/image.png");
+                background-image: url("website/image2.png");
                 background-size: cover;
+                image-rendering: pixelated;
             }
             .figure1subpanel_rightend:has(+ .figure1subpanel:hover)>div {
                 opacity: 1;
@@ -397,26 +399,26 @@
                                 <div><div></div></div>
                             </div>
                             <div style="grid-area: m;" class="figure1subpanel_rightend">
-                                <div style="opacity: 1;"><div style="left: 0%;"></div></div>
+                                <div style="opacity: 1;"><div style="left: 0%; top: -400%;"></div></div>
                             </div>
                             
                             
                             <div style="grid-area: m;" class="figure1subpanel_rightend">
-                                <div><div style="left: -200%;"></div></div>
+                                <div><div style="left: 0%; top: -300%;"></div></div>
                             </div>
                             <div style="grid-area: a;" class="figure1subpanel">
                                 <div><div style="left: 0%; top: 0%"></div></div>
                             </div>
 
                             <div style="grid-area: m;" class="figure1subpanel_rightend">
-                                <div><div style="left: -200%; top: -400%;"></div></div>
+                                <div><div style="left: -100%; top: -300%;"></div></div>
                             </div>
                             <div style="grid-area: b;" class="figure1subpanel">
                                 <div><div style="left: -100%; top: 0%"></div></div>
                             </div>
 
                             <div style="grid-area: m;" class="figure1subpanel_rightend">
-                                <div><div style="left: -200%;"></div></div>
+                                <div><div style="left: -200%; top: -300%;"></div></div>
                             </div>
                             <div style="grid-area: c;" class="figure1subpanel">
                                 <div><div style="left: -200%; top: 0%"></div></div>
@@ -424,7 +426,7 @@
 
 
                             <div style="grid-area: m;" class="figure1subpanel_rightend">
-                                <div><div style="left: -100%;"></div></div>
+                                <div><div style="left: 0%; top: -400%;"></div></div>
                             </div>
                             <div style="grid-area: d;" class="figure1subpanel">
                                 <div><div style="left: 0%; top: -100%"></div></div>
@@ -438,7 +440,7 @@
                             </div>
 
                             <div style="grid-area: m;" class="figure1subpanel_rightend">
-                                <div><div style="left: -100%;"></div></div>
+                                <div><div style="left: -200%; top: -400%;"></div></div>
                             </div>
                             <div style="grid-area: f;" class="figure1subpanel">
                                 <div><div style="left: -200%; top: -100%"></div></div>
@@ -446,27 +448,27 @@
 
 
                             <div style="grid-area: m;" class="figure1subpanel_rightend">
-                                <div><div style="left: -200%;"></div></div>
+                                <div><div style="left: 0%; top: -500%;"></div></div>
                             </div>
                             <div style="grid-area: g;" class="figure1subpanel">
                                 <div><div style="left: 0%; top: -200%"></div></div>
                             </div>
 
                             <div style="grid-area: m;" class="figure1subpanel_rightend">
-                                <div><div style="left: -100%;"></div></div>
+                                <div><div style="left: -100%; top: -500%;"></div></div>
                             </div>
                             <div style="grid-area: h;" class="figure1subpanel">
                                 <div><div style="left: -100%; top: -200%"></div></div>
                             </div>
 
                             <div style="grid-area: m;" class="figure1subpanel_rightend">
-                                <div><div style="left: -200%;"></div></div>
+                                <div><div style="left: -200%; top: -500%;"></div></div>
                             </div>
                             <div style="grid-area: i;" class="figure1subpanel">
                                 <div><div style="left: -200%; top: -200%"></div></div>
                             </div>
                         </div>
-                        <p><b>Figure 1.</b> Cartoon illustration of the causal relationship between the training data and the final generated sample. The training data (left) is used to train a model (middle), which is then used to generate a sample (right). Hover over the training set to samples from the training data. Removing samples leads to changes in the final generated sample. The changes in the final generated sample can be used to infer what the model learned from the training data.
+                        <p><b>Figure 1.</b> Toy example illustrating of the causal relationship between the training data and the final generated sample. The training data (left) is used to train a model (middle), which is then used to generate a sample (right). Hover over the training set to samples from the training data. Removing samples leads to changes in the final generated sample. The changes in the final generated sample can be used to infer what the model learned from the training data.
                     </div>
 
                     <h3>Computing Counterfactual Samples Efficiently via Ablation</h3>
@@ -479,7 +481,7 @@
                     <div class="figure">
                         <canvas id="figure2" width="1400" height="1000"></canvas>
                         <p><b>Figure 2.</b> Using ablation to compute counterfactuals with a digit generator trained on 384 digits (<span id="figure2_info">only 10 training digits</span> are shown on the left, <span class="clickable" id="figure2_button2">click here to show all 384</span>).
-                            Hover over the training set on the left to highlight in red the flow of the causal influence from the training data (left) to the independently trained model parameters (small circles) to the combined model (large circle) to the generated sample (right). Click a member of the training set on the left to remove it via albation, and click it again to unablate. Note how the flow of causal influence is broken, and how it is not broken for any other member of the training dataset. <span class="clickable" id="figure2_button">Click here to generate a different image</span>.</p>
+                            Hover over the training set on the left to highlight in red the flow of the causal influence from the training data (left) to the independently trained model parameters (small circles) to the combined model (large circle) to the generated sample (right). Click a member of the training set on the left to remove it via albation, and click it again to unablate. Note how the flow of causal influence is broken, and how it is not broken for any other member of the training dataset. <span class="clickable" id="figure2_button">Click here to view more examples</span>.</p>
                     </div>
                 </div>
 
@@ -508,7 +510,7 @@
                                 <div style = "width: 11.11%; border: solid 1px black; margin: -1px;"></div>
                             </div>
                         </div>
-                        <p><b>Figure 3.</b> Examples of images that were sampled by diffusion model ensembles. Each image was generated by a different ensemble. <span class="clickable" id="figure4_button">Click here to generate different images</span>.</p>
+                        <p><b>Figure 3.</b> Examples of images that were sampled by diffusion model ensembles. Each image was generated by a different ensemble. <span class="clickable" id="figure4_button">Click here to view more images</span>.</p>
                     </div>
 
                     <h3>Attributability Diminishes with Training Dataset Size</h3>
@@ -567,7 +569,7 @@
                 <div style="border-bottom: solid 2px rgba(0,0,0,1); height: 0.1em; width: 100%;"></div>
                 <div style="border-bottom: solid 1px rgba(0,0,0,1); height: 0.5em; width: calc(100% - 2em);"></div>
                 <div style="display: flex; flex-direction: row; justify-content: center; padding-top: 3em;">
-                    <a href="https://arxiv.org/abs/2406.07908">
+                    <a href="https://arxiv.org/pdf/2306.02174.pdf">
                         <div class="button">
                             Check out the preprint for more details
                         </div>
